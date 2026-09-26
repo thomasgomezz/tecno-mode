@@ -25,3 +25,14 @@ export function getProductsByCategory(categoryId) {
     }, 800);
   });
 }
+
+//Devuelve un solo producto, buscadolo por id..
+
+export function getProductById(id){
+  return new Promise((resolve) => {
+    setTimeout(() => {
+    resolve(products.find((products) => products.id === id));
+  }, 800);
+});
+}
+
