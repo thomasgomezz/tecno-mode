@@ -5,9 +5,6 @@ import ItemDetailContainer from "./components/ItemDetailContainer/ItemDetailCont
 import Cart from "./components/Cart/Cart";
 import CheckoutForm from "./components/CheckoutForm/CheckoutForm";
 
-
-
-
 function App()
 {
   return (
