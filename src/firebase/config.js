@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, initializeFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { products } from "../data/products";
 
 const firebaseConfig = {
@@ -12,8 +12,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+  useFetchStreams: false,
+});
 
+// Sube los productos locales a Firestore (ya la usamos una vez, la dejamos por si hace falta)
 export async function seedProducts() {
   console.log("Botón tocado, empezando a cargar...");
   try {
@@ -24,4 +28,32 @@ export async function seedProducts() {
   } catch (error) {
     console.error("Error al cargar productos:", error);
   }
+}
+
+// Devuelve todos los productos de la colección "products"
+export async function getProducts() {
+  const querySnapshot = await getDocs(collection(db, "products"));
+  return querySnapshot.docs.map((docSnap) => ({
+    firestoreId: docSnap.id,
+    ...docSnap.data(),
+  }));
+}
+
+// Devuelve solo los productos de una categoría
+export async function getProductsByCategory(categoryId) {
+  const q = query(collection(db, "products"), where("category", "==", categoryId));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((docSnap) => ({
+    firestoreId: docSnap.id,
+    ...docSnap.data(),
+  }));
+}
+
+// Devuelve un solo producto, buscándolo por su id
+export async function getProductById(id) {
+  const q = query(collection(db, "products"), where("id", "==", id));
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) return null;
+  const docSnap = querySnapshot.docs[0];
+  return { firestoreId: docSnap.id, ...docSnap.data() };
 }
