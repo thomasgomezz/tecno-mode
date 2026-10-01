@@ -57,3 +57,9 @@ export async function getProductById(id) {
   const docSnap = querySnapshot.docs[0];
   return { firestoreId: docSnap.id, ...docSnap.data() };
 }
+
+// Crea una orden nueva en la colección "orders" y devuelve su id
+export async function createOrder(order) {
+  const docRef = await addDoc(collection(db, "orders"), order);
+  return docRef.id;
+}
