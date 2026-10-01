@@ -17,7 +17,7 @@ function ItemDetail({item}) {
 
     return(
         <div>
-            <img src={item.image} alt={item.name} />
+            <img src={item.image} alt={item.name} style={{ width: "300px", height: "200px", objectFit: "cover" }} />
             <h2>{item.name}</h2>
             <p>{item.description}</p>
             <p>${item.price}</p>
